@@ -1,2 +1,2 @@
 # tagterm
-Remove tags from valid xhtml file.
+Remove tags from valid XHTML file.
