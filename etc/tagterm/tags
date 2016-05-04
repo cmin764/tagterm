@@ -1,0 +1,8 @@
+# The tags below will not be removed in the process.
+# You can also use regular expressions.
+
+i
+b
+em
+h\d
+p

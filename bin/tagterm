@@ -1,14 +1,87 @@
 #! /usr/bin/env python
 
-
 import argparse
+import logging
+import sys
 
 import tagterm
 
 
+def convert(args):
+    converter = tagterm.Converter(path_in=args.input,
+                                  path_out=args.output)
+    converter.load()
+    converter.convert()
+    converter.save()
+
+
+def remove(args):
+    remover = tagterm.Remover(path_in=args.input,
+                              path_out=args.output)
+    remover.load()
+    remover.remove()
+    remover.save()
+
+
+def validate(args):
+    validator = tagterm.Validator(path_in=args.input)
+    validator.load()
+    validator.validate()
+
+
 def main():
-    print("Hello World!")
+    tparser = argparse.ArgumentParser(
+        description="Remove tags from valid xhtml file.")
+    tparser.add_argument(
+        "-v", "--verbose", action="store_true",
+        help="show debugging messages"
+    )
+    subtparser = tparser.add_subparsers(title="commands")
+
+    common_read = argparse.ArgumentParser(add_help=False)
+    common_read.add_argument(
+        "-i", "--input", metavar="FILE",
+        help="input file path"
+    )
+    common_write = argparse.ArgumentParser(add_help=False,
+                                           parents=[common_read])
+    common_write.add_argument(
+        "-o", "--output", metavar="FILE",
+        help="output file path"
+    )
+
+    convert_parser = subtparser.add_parser(
+        "convert",
+        help="convert a HTML file to XHTML one",
+        parents=[common_write]
+    )
+    convert_parser.set_defaults(func=convert)
+
+    remove_parser = subtparser.add_parser(
+        "remove",
+        help="remove tags from a XHTML valid file",
+        parents=[common_write]
+    )
+    remove_parser.set_defaults(func=remove)
+
+    validate_parser = subtparser.add_parser(
+        "validate",
+        help="check if an input file is HTML valid",
+        parents=[common_read]
+    )
+    validate_parser.set_defaults(func=validate)
+
+    args = tparser.parse_args()
+    try:
+        args.func(args)
+    except Exception as exc:
+        logging.error(exc)
+        raise    # FIXME(cmin): remove this after beta release
+    else:
+        exc = None
+        logging.info("Operation completed successfully")
+    return tagterm.get_return_code(exc)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
