@@ -36,4 +36,4 @@ class RemoveError(ProcessError):
 class ValidateError(ProcessError):
     """Markup validation related errors."""
 
-    CODE = 20
+    CODE = 30

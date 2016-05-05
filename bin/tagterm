@@ -12,7 +12,8 @@ log = tagterm.get_logger(__name__)
 
 def convert(args):
     converter = tagterm.Converter(
-        args.input, path_out=args.output, debug=args.verbose
+        args.input, path_out=args.output, debug=args.verbose,
+        permissive=args.permissive
     )
     converter.load()
     converter.convert()
@@ -29,7 +30,8 @@ def remove(args):
 
 
 def validate(args):
-    validator = tagterm.Validator(args.input, debug=args.verbose)
+    validator = tagterm.Validator(
+        args.input, debug=args.verbose, permissive=args.permissive)
     validator.load()
     validator.validate()
 
@@ -54,25 +56,30 @@ def main():
         "-o", "--output", metavar="PATH",
         help="output directory path"
     )
+    common_validate = argparse.ArgumentParser(add_help=False)
+    common_validate.add_argument(
+        "-p", "--permissive", action="store_true",
+        help="ignore html tidy warnings"
+    )
 
     convert_parser = subtparser.add_parser(
         "convert",
-        help="convert a HTML file to XHTML one",
-        parents=[common_write]
+        help="convert a HTML file to a XHTML one",
+        parents=[common_write, common_validate]
     )
     convert_parser.set_defaults(func=convert)
 
     remove_parser = subtparser.add_parser(
         "remove",
-        help="remove tags from a XHTML valid file",
+        help="remove tags from a XHTML valid file and create XML from it",
         parents=[common_write]
     )
     remove_parser.set_defaults(func=remove)
 
     validate_parser = subtparser.add_parser(
         "validate",
-        help="check if an input file is HTML valid",
-        parents=[common_read]
+        help="check if an input file is a HTML valid file",
+        parents=[common_read, common_validate]
     )
     validate_parser.set_defaults(func=validate)
 
@@ -83,7 +90,7 @@ def main():
         args.func(args)
     except Exception as exc:
         log.error(exc)
-        #raise    # FIXME(cmin): remove this after beta release
+        # raise    # FIXME(cmin): remove this after beta release
     else:
         exc = None
         log.info("Operation completed successfully")

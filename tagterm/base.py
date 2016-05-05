@@ -6,6 +6,9 @@ import os
 from tagterm.exceptions import ProcessError
 
 
+EOL = "\n"    # end of line default character(s)
+
+
 def get_logger(name, debug=False):
     logging.basicConfig(format="%(levelname)s - %(message)s")
     log = logging.getLogger(name)
