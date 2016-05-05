@@ -7,24 +7,29 @@ import sys
 import tagterm
 
 
+log = tagterm.get_logger(__name__)
+
+
 def convert(args):
-    converter = tagterm.Converter(path_in=args.input,
-                                  path_out=args.output)
+    converter = tagterm.Converter(
+        args.input, path_out=args.output, debug=args.verbose
+    )
     converter.load()
     converter.convert()
     converter.save()
 
 
 def remove(args):
-    remover = tagterm.Remover(path_in=args.input,
-                              path_out=args.output)
+    remover = tagterm.Remover(
+        args.input, path_out=args.output, debug=args.verbose
+    )
     remover.load()
     remover.remove()
     remover.save()
 
 
 def validate(args):
-    validator = tagterm.Validator(path_in=args.input)
+    validator = tagterm.Validator(args.input, debug=args.verbose)
     validator.load()
     validator.validate()
 
@@ -46,8 +51,8 @@ def main():
     common_write = argparse.ArgumentParser(add_help=False,
                                            parents=[common_read])
     common_write.add_argument(
-        "-o", "--output", metavar="FILE",
-        help="output file path"
+        "-o", "--output", metavar="PATH",
+        help="output directory path"
     )
 
     convert_parser = subtparser.add_parser(
@@ -72,16 +77,20 @@ def main():
     validate_parser.set_defaults(func=validate)
 
     args = tparser.parse_args()
+    level = logging.DEBUG if args.verbose else logging.INFO
+    log.setLevel(level)
     try:
         args.func(args)
     except Exception as exc:
-        logging.error(exc)
-        raise    # FIXME(cmin): remove this after beta release
+        log.error(exc)
+        #raise    # FIXME(cmin): remove this after beta release
     else:
         exc = None
-        logging.info("Operation completed successfully")
+        log.info("Operation completed successfully")
     return tagterm.get_return_code(exc)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    rcode = main()
+    log.debug("Exiting with code %d", rcode)
+    sys.exit(rcode)

@@ -6,10 +6,18 @@ import os
 from tagterm.exceptions import ProcessError
 
 
+def get_logger(name, debug=False):
+    logging.basicConfig(format="%(levelname)s - %(message)s")
+    log = logging.getLogger(name)
+    level = logging.DEBUG if debug else logging.INFO
+    log.setLevel(level)
+    return log
+
+
 class BaseReadProcess(object):
     """Simple base for every process that needs to make read-only actions."""
 
-    def __init__(self, path_in):
+    def __init__(self, path_in, debug=False):
         if not os.path.isfile(path_in):
             raise ProcessError("invalid file path")
         self.path_in = path_in
@@ -21,22 +29,30 @@ class BaseReadProcess(object):
         self.file_ext = chunks[1]
 
         self.content = None
+        self._log = None
+        self.debug = debug
 
     def load(self):
-        logging.info("Reading content of %s", self.path_in)
+        self.log.info("Reading content of %s", self.path_in)
         with open(self.path_in) as stream:
             self.content = stream.read()
+
+    @property
+    def log(self):
+        if not self._log:
+            self._log = get_logger(__name__, debug=self.debug)
+        return self._log
 
 
 class BaseWriteProcess(BaseReadProcess):
     """Simple base for every process that needs to make writeable actions."""
 
-    def __init__(self, path_in, path_out=None):
-        super(BaseWriteProcess, self).__init__(path_in)
+    def __init__(self, path_in, path_out=None, **kwargs):
+        super(BaseWriteProcess, self).__init__(path_in, **kwargs)
 
         path_out = path_out or os.path.dirname(os.path.normpath(self.path_in))
         if not os.path.isdir(path_out):
-            logging.warning("Creating output path %s", path_out)
+            self.log.warning("Creating output path %s", path_out)
             os.makedirs(path_out)
         fname = self.get_file_name()
         ext = self.get_file_ext()
@@ -51,6 +67,6 @@ class BaseWriteProcess(BaseReadProcess):
         return self.file_ext
 
     def save(self):
-        logging.info("Saving content for %s", self.path_out)
+        self.log.info("Saving content for %s", self.path_out)
         with open(self.path_out, "w") as stream:
             stream.write(self.content)

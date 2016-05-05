@@ -8,3 +8,6 @@ class Remover(BaseWriteProcess):
 
     def remove(self):
         raise RemoveError("invalid DOM")
+
+    def get_file_name(self):
+        return super(Remover, self).get_file_name() + "-remove"

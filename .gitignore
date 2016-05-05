@@ -63,3 +63,10 @@ target/
 
 # Java compile
 *.class
+
+# Swap/Backup files
+.~*
+
+# Processed resources
+res/*-convert.*ml
+res/*-remove.*ml

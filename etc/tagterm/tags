@@ -1,8 +1,10 @@
 # The tags below will not be removed in the process.
 # You can also use regular expressions.
 
-i
-b
-em
-h\d
-p
+i         # italic
+b         # bold
+em        # emphasized
+small     # small text
+strong    # big text
+h\d       # headers
+p         # paragraphs
