@@ -2,6 +2,8 @@
 
 import argparse
 import logging
+import os
+import shutil
 import sys
 
 import tagterm
@@ -18,6 +20,24 @@ def convert(args):
     converter.load()
     converter.convert()
     converter.save()
+
+
+def include(args):
+    for path in args.path:
+        src = os.path.abspath(path)
+        dest = os.path.join(
+            os.path.abspath(
+                os.path.dirname(
+                    tagterm.__path__[0]
+                )
+            ),
+            os.path.basename(src)
+        )
+        if all(map(os.path.exists, [src])):
+            log.info("Copy %s to %s", src, dest)
+            shutil.copytree(src, dest)
+        else:
+            raise Exception("Invalid path(s)")
 
 
 def remove(args):
@@ -68,6 +88,16 @@ def main():
         parents=[common_write, common_validate]
     )
     convert_parser.set_defaults(func=convert)
+
+    include_parser = subtparser.add_parser(
+        "include",
+        help="include external dirs/files to the installed project directory",
+    )
+    include_parser.add_argument(
+        "path", metavar="PATH", nargs="+",
+        help="path to file or directory that you want to copy"
+    )
+    include_parser.set_defaults(func=include)
 
     remove_parser = subtparser.add_parser(
         "remove",

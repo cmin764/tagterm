@@ -22,6 +22,7 @@ setup(
     author_email="cmin764@gmail.com",
     packages=["tagterm"],
     scripts=["bin/tagterm"],
+    package_data={"tagterm": ["etc/tagterm/*"]},
     include_package_data=True,
     install_requires=read("requirements.txt").splitlines()
 )
