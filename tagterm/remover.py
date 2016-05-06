@@ -6,7 +6,7 @@ from HTMLParser import HTMLParser
 from xml.dom import minidom
 from xml.etree import ElementTree
 
-from tagterm.base import EOL, BaseWriteProcess
+from tagterm import base
 from tagterm.exceptions import RemoveError
 
 
@@ -14,8 +14,7 @@ class TagTerminator(HTMLParser):
 
     TAGS_PATH = os.path.normpath(
         os.path.join(
-            os.path.dirname(__file__),
-            os.pardir,
+            base.PROJECT,
             os.path.join(
                 "etc",
                 "tagterm",
@@ -75,7 +74,7 @@ class TagTerminator(HTMLParser):
             line = line.strip()
             if line:
                 lines.append(line)
-        return EOL.join(lines)
+        return base.EOL.join(lines)
 
     @property
     def content(self):
@@ -103,7 +102,7 @@ class TagTerminator(HTMLParser):
         self.chunks.append(data)
 
 
-class Remover(BaseWriteProcess):
+class Remover(base.BaseWriteProcess):
 
     def remove(self):
         try:

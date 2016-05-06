@@ -1,4 +1,4 @@
 #! /bin/sh
 
 python setup.py install
-tagterm include etc
+tagterm include etc res

@@ -26,11 +26,7 @@ def include(args):
     for path in args.path:
         src = os.path.abspath(path)
         dest = os.path.join(
-            os.path.abspath(
-                os.path.dirname(
-                    tagterm.__path__[0]
-                )
-            ),
+            tagterm.PROJECT,
             os.path.basename(src)
         )
         if all(map(os.path.exists, [src])):

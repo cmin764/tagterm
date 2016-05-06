@@ -8,6 +8,14 @@ from tagterm.exceptions import ProcessError
 
 EOL = "\n"    # end of line default character(s)
 
+PROJECT = os.path.normpath(
+    os.path.join(
+        __file__,
+        os.path.pardir,
+        os.path.pardir
+    )
+)
+
 
 def get_logger(name, debug=False):
     logging.basicConfig(format="%(levelname)s - %(message)s")
