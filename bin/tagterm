@@ -20,6 +20,7 @@ def convert(args):
     converter.load()
     converter.convert()
     converter.save()
+    print(converter.path_out)
 
 
 def include(args):
@@ -43,6 +44,7 @@ def remove(args):
     remover.load()
     remover.remove()
     remover.save()
+    print(remover.path_out)
 
 
 def validate(args):

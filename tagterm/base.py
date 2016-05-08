@@ -18,7 +18,10 @@ PROJECT = os.path.normpath(
 
 
 def get_logger(name, debug=False):
-    logging.basicConfig(format="%(levelname)s - %(message)s")
+    logging.basicConfig(
+        filename="tagterm.log",
+        format="%(levelname)s - %(asctime)s - %(message)s"
+    )
     log = logging.getLogger(name)
     level = logging.DEBUG if debug else logging.INFO
     log.setLevel(level)
@@ -62,6 +65,7 @@ class BaseWriteProcess(BaseReadProcess):
         super(BaseWriteProcess, self).__init__(path_in, **kwargs)
 
         path_out = path_out or os.path.dirname(os.path.normpath(self.path_in))
+        path_out = os.path.abspath(path_out)
         if not os.path.isdir(path_out):
             self.log.warning("Creating output path %s", path_out)
             os.makedirs(path_out)
