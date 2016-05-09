@@ -93,6 +93,11 @@ Hello World!
 ```
 Which is the final XML file (with removed tags), obtained from the XHTML
 file converted from the first **simple.html** resource example file.
+Check *tagterm.log* file for further info, whenever you're using the Python
+executable/script or the Java wrapper below.
+
+Install Java and run `./main.sh tagterm ../res/error.html` under the *src*
+directory to see it in action from a wrapper perspective.
 
 You'll find the kept tags under the *etc/tagterm/tags* file.
 Please read the docs for more info.
