@@ -1,4 +1,2 @@
-* update documentation (tutorials & usage examples, code autodoc)
-    + nosetests --processes 1 --nologcapture
 * normalize style attributes by adding extra tags
 * identify paragraphs and do additional processing
