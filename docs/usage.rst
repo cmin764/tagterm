@@ -33,7 +33,7 @@ recommended to use the prebuilt executable called **tagterm.exe**.
     cat res/error-convert-remove.xml    # everything ok
 
 .. note::
-    The `-v` flag stand for *verbose* and you can also use `-o` option for
+    The `-v` flag stands for *verbose* and you can also use `-o` option for
     putting the output in a separate path. Run with `-h` for more info, based
     on the chosen command.
 

@@ -1,4 +1,4 @@
-# tagterm
+# tagterm [![Documentation Status](https://readthedocs.org/projects/tagterm/badge/?version=latest)](http://tagterm.readthedocs.io/?badge=latest)
 
 Remove tags from valid XHTML files.
 
@@ -46,18 +46,18 @@ Then you should see this:
 ```xml
 <?xml version="1.0" ?>
 <xml>
-	
+
 Title of the document
 
 	<h1>
 Welcome
 </h1>
-	
+
 
 	<p>
 Hello World!
 </p>
-	
+
 
 </xml>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -112,6 +112,6 @@ Please read the docs for more info.
     + Iacob Radu Constantin <radu.constantin@info.uaic.ro>
     + Paula Roxana Tanasa <paula.tanasa@info.uaic.ro>
     + Tesu Andrei <andrei.tesu@info.uaic.ro>
-* Documentation: *readthedocs link coming soon*
+* Documentation: http://tagterm.readthedocs.io/
 * Source: https://github.com/cmin764/tagterm.git
 * License: MIT
