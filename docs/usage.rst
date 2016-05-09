@@ -61,6 +61,6 @@ For editing the tags configuration file, you have to edit the
 previously setup installed package to make a new build based on new settings.
 
 1. Edit **tags** file.
-2. Run `./setup.sh` again.
+2. Run `./setup.sh` or `setup.bat` again.
 3. :ref:`Build <build>` again.
 4. Use the newly created *bin/dist/tagterm* executable.

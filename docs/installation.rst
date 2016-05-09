@@ -14,15 +14,28 @@ More details about the API :ref:`here <api>`.
 Preparing the system
 --------------------
 
+*Linux*
+
 .. code-block:: bash
 
     sudo apt update
     sudo apt install --upgrade python python-dev python-setuptools libtidy-dev
     sudo -H easy_install -U pip
 
+*Windows*
+
+1. Download and install Python interpreter: https://www.python.org/downloads/release/python-2711/
+2. Install PIP: https://pip.pypa.io/en/stable/installing/
+
+.. note::
+    Tidy library dependency will be copied and registered by installing
+    the package.
+
 
 Clone & install
 ---------------
+
+*Linux*
 
 .. code-block:: bash
 
@@ -31,6 +44,17 @@ Clone & install
 
     sudo -H pip install -Ur requirements.txt
     sudo ./setup.sh
+
+*Windows*
+
+.. code-block:: batch
+
+    git clone https://github.com/cmin764/tagterm.git
+    cd tagterm
+
+    pip install -Ur requirements.txt
+    rem Run this as Administrator:
+    setup.bat
 
 .. note::
     You can also use *virtualenv(wrapper)* to install the package and
@@ -48,6 +72,8 @@ Build *tagterm* executable
 For this to work properly, you have to really install the package (no develop)
 and have the appropriate version of PyInstaller (see *requirements.txt*).
 
+*Linux*/*Windows*
+
 .. code-block:: bash
 
     cd bin
@@ -55,7 +81,7 @@ and have the appropriate version of PyInstaller (see *requirements.txt*).
     stat dist/tagterm    # details about the built executable
 
 And you'll find the built executable under this path: *dist/tagterm*.
-You can copy it anywhere and use as a standalone MZPE/ELF executable.
+You can copy it anywhere and use it as a standalone ELF/MZPE executable.
 Also, you can use the prebuilt ones, available under *bin* directory:
 
     * tagterm (pure Python script)
@@ -66,6 +92,8 @@ Also, you can use the prebuilt ones, available under *bin* directory:
 Build Java wrapper
 ------------------
 
+*Linux*
+
 .. code-block:: bash
 
     cd src
@@ -75,6 +103,18 @@ Build Java wrapper
     # Or just simple:
     ./main.sh tagterm ../res/error.html
 
+*Windows*
+
+.. code-block:: batch
+
+    cd src
+    javac Main.java    # compile
+    java Main ..\bin\tagterm.exe ..\res\error.html    # run a set of examples
+
+    # Or just simple:
+    main.bat ..\bin\tagterm.exe ..\res\error.html
+
+
 And you should see no exception trace in case everything is fine.
 Instead of `tagterm` you may use any of the `../bin/dist/tagterm*` built
-executables (or prebuilt ones).
+executables (or prebuilt ones) suitable for your platform.
