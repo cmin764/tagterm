@@ -1,6 +1,6 @@
 # tagterm [![Documentation Status](https://readthedocs.org/projects/tagterm/badge/?version=latest)](http://tagterm.readthedocs.io/?badge=latest)
 
-Remove tags from valid XHTML files.
+Remove tags from validated XHTML files.
 
 
 ## Installation

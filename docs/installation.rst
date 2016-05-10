@@ -108,10 +108,10 @@ Build Java wrapper
 .. code-block:: batch
 
     cd src
-    javac Main.java    # compile
-    java Main ..\bin\tagterm.exe ..\res\error.html    # run a set of examples
+    javac Main.java
+    java Main ..\bin\tagterm.exe ..\res\error.html
 
-    # Or just simple:
+    # rem Run with Windows executable:
     main.bat ..\bin\tagterm.exe ..\res\error.html
 
 
