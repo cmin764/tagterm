@@ -51,11 +51,11 @@ public final class Tagterm extends Base {
 
         String line = br.readLine();
 
-        if (output && line == null) {
-            throw new Exception("missing output");
-        }
         if (rcode != 0) {
             throw new Exception(getErrMsg(rcode));
+        }
+        if (output && line == null) {
+            throw new Exception("missing output");
         }
 
         return line;
