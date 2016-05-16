@@ -22,7 +22,7 @@ recommended to use the prebuilt executable called **tagterm.exe**.
     # List of available commands.
     tagterm --help
 
-    # Validate and convert HTML file to XHTML with permissive flag on.
+    # Validate and convert HTML file to XHTML with permissive level 1.
     tagterm -v validate -i res/error.html -p
     tagterm -v convert -i res/error.html -p
     # Check and watch out for nonzero exit codes.

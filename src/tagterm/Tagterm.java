@@ -6,7 +6,7 @@ import java.io.*;
 public final class Tagterm extends Base {
 
     private static final boolean VERBOSE = true;
-    // If `true`, do not interpret HTML tidy validation warnings as errors.
+    // If `true`, ignore HTML tidy validation warnings/errors.
     private static final boolean PERMISSIVE = true;
 
     private String path;
@@ -74,7 +74,7 @@ public final class Tagterm extends Base {
     public boolean validate(String file) throws Exception {
         String arg = String.format("validate -i %s", file);
         if (PERMISSIVE) {
-            arg += " -p";
+            arg += " -pp";
         }
         exec(arg, false);
         return true;
@@ -88,7 +88,7 @@ public final class Tagterm extends Base {
     public String convert(String file) throws Exception {
         String arg = String.format("convert -i %s", file);
         if (PERMISSIVE) {
-            arg += " -p";
+            arg += " -pp";
         }
         String out = exec(arg, true);
         return out;

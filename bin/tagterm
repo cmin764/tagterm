@@ -76,8 +76,8 @@ def main():
     )
     common_validate = argparse.ArgumentParser(add_help=False)
     common_validate.add_argument(
-        "-p", "--permissive", action="store_true",
-        help="ignore html tidy warnings"
+        "-p", "--permissive", action="count",
+        help="ignore html tidy warnings (use -pp for skipping errors too)"
     )
 
     convert_parser = subtparser.add_parser(
@@ -118,7 +118,6 @@ def main():
         args.func(args)
     except Exception as exc:
         log.error(exc)
-        # raise    # FIXME(cmin): remove this after beta release
     else:
         exc = None
         log.info("Operation completed successfully")

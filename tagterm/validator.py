@@ -10,12 +10,8 @@ from tagterm.exceptions import ValidateError
 
 class Validator(BaseReadProcess):
 
-    FAIL_MARKERS = [
-        "Error",
-    ]
-    _NOT_PERMISSIVE = [
-        "Warning",
-    ]
+    E_MARKER = "Error"
+    W_MARKER = "Warning"
 
     TIDY_OPTIONS = {
         # XHTML instead of HTML4.
@@ -36,12 +32,14 @@ class Validator(BaseReadProcess):
     }
 
     def __init__(self, *args, **kwargs):
-        self.permissive = kwargs.pop("permissive", None)
+        self.permissive = kwargs.pop("permissive", 0)
         super(Validator, self).__init__(*args, **kwargs)
 
-        self.markers = self.FAIL_MARKERS[:]
-        if not self.permissive:
-            self.markers.extend(self._NOT_PERMISSIVE)
+        self.markers = [self.E_MARKER, self.W_MARKER]
+        if self.permissive > 0:
+            self.markers.remove(self.W_MARKER)
+            if self.permissive > 1:
+                self.markers.remove(self.E_MARKER)
 
     def validate(self):
         document, errors = tidylib.tidy_document(

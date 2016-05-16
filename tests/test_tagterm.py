@@ -16,7 +16,7 @@ def convert(name):
     converter = tagterm.Converter(
         get_res(name + ".html"),
         debug=DEBUG,
-        permissive=True
+        permissive=1
     )
     converter.load()
     converter.convert()
@@ -63,7 +63,7 @@ class TestTagterm(unittest.TestCase):
         validator = tagterm.Validator(
             get_res(FNAME + ".html"),
             debug=DEBUG,
-            permissive=True
+            permissive=1
         )
         validator.load()
         validator.validate()

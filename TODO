@@ -1,5 +1,4 @@
 * normalize style attributes by adding extra tags
 * identify paragraphs and do additional processing
-* build -pp (super permissive) count argument (ignore tidy errors)
 * fix these:
     3633 ERROR - 2016-05-14 15:22:58,480 - 'ascii' codec can't encode character u'\x     cd' in position 1209: ordinal not in range(128)
