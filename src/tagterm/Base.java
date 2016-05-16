@@ -5,7 +5,7 @@ import java.nio.file.*;
 
 public class Base {
 
-    private static final String ENCODING = "utf-8";
+    private static final String ENCODING = "ascii";
 
     protected static void print(String text) {
         System.out.println(text);

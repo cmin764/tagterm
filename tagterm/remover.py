@@ -114,7 +114,7 @@ class Remover(base.BaseWriteProcess):
             doc = ElementTree.fromstring(content)
             content = ElementTree.tostring(doc, method="xml")
             xml = minidom.parseString(content)
-            self.content = xml.toprettyxml()
+            self.content = xml.toprettyxml().encode("utf-8")
         except Exception as exc:
             raise RemoveError("could not remove tags ({})".format(exc))
 
