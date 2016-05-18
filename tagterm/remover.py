@@ -10,6 +10,45 @@ from tagterm import base
 from tagterm.exceptions import RemoveError
 
 
+def content_normalizer(path):
+    tree = ElementTree.parse(path)
+    root = tree.getroot()
+
+    styleToKeep = {
+        'bold': 'b',
+        'italic': 'i',
+        'super': 'sup',
+        'sub': 'sub'
+    }
+
+    for child in root.findall(".//*[@style]"):
+
+        regex = ("(font-((weight:( )*bold(;)*)|((style:)( )*italic(;)*)))|"
+                 "(vertical-align:( )*(super(;)*|sub(;)*))")
+        name = child.get("style")
+        copychild = child
+
+        changed = 0
+        for s in styleToKeep:
+            if name.find(s) != -1:
+                changed = 1
+                addChild = styleToKeep[s]
+                currentChild = ElementTree.SubElement(copychild,
+                                                      addChild)
+                copychild = currentChild
+
+        if changed == 1:
+            currentChild.text = child.text
+            child.attrib["style"] = re.sub(regex, "",
+                                           name)
+            if child.attrib["style"] == "":
+                del child.attrib["style"]
+            del child.text
+
+    outFile = open(path, "w")
+    tree.write(outFile)
+
+
 class TagTerminator(HTMLParser):
 
     TAGS_PATH = os.path.normpath(
