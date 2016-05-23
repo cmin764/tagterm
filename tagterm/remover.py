@@ -95,6 +95,8 @@ def content_normalizer(path):
 
 class TagTerminator(HTMLParser):
 
+    ADD_PARATAG = True
+
     TAGS_PATH = os.path.normpath(
         os.path.join(
             base.PROJECT,
@@ -112,6 +114,8 @@ class TagTerminator(HTMLParser):
 
         self.tags = self._load_tags()
         self.chunks = []
+        self.level = 0
+        self.paralevel = -1
 
     def _load_tags(self):
         tags = []
@@ -159,18 +163,28 @@ class TagTerminator(HTMLParser):
                 lines.append(line)
         return base.EOL.join(lines)
 
+    def _check_para(self, tag):
+        if tag != "br":
+            return
+        self.log.debug("New paragraph on level %d", self.level)
+        self.chunks.append(base.EOL * 2)
+        if self.ADD_PARATAG:
+            self.paralevel = self.level
+
     @property
     def content(self):
         return self._postprocess("".join(self.chunks))
 
     def handle_starttag(self, tag, attrs):
         if self._keep_tag(tag):
+            self.level += 1
             self.log.debug("Keeping tag %r", tag)
             ent = self._get_html(tag, attrs=attrs)
             self.chunks.append(ent)
 
     def handle_endtag(self, tag):
         if self._keep_tag(tag):
+            self.level -= 1
             ent = self._get_html(tag)
             self.chunks.append(ent)
 
@@ -179,10 +193,15 @@ class TagTerminator(HTMLParser):
             self.log.debug("Keeping tag %r", tag)
             ent = self._get_html(tag, attrs=attrs, xtag=True)
             self.chunks.append(ent)
+        self._check_para(tag)
 
     def handle_data(self, data):
         self.log.debug("Keeping data %r", data)
-        self.chunks.append(data)
+        before = after = ""
+        if self.ADD_PARATAG and self.paralevel == self.level:
+            self.paralevel = -1
+            before, after = "<p>", "</p>"
+        self.chunks.extend([before, data, after])
 
 
 class Remover(base.BaseWriteProcess):
