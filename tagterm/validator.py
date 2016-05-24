@@ -29,6 +29,10 @@ class Validator(BaseReadProcess):
         # May not get what you expect but you will get something.
         "force-output": 1,
         "numeric-entities": 1,
+        # Support unicode.
+        "char-encoding": "utf8",
+        "input-encoding": "utf8",
+        "output-encoding": "utf8",
     }
 
     def __init__(self, *args, **kwargs):

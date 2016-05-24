@@ -63,9 +63,10 @@ public final class Tagterm extends Base {
 
     private String createFile(String content, String name, String ext) throws Exception {
         File temp = File.createTempFile(name, "." + ext);
-        FileWriter fileoutput = new FileWriter(temp);
-        BufferedWriter buffout = new BufferedWriter(fileoutput);
-        buffout.write(content, 0, content.length());
+        FileOutputStream fileoutput = new FileOutputStream(temp);
+        BufferedWriter buffout = new BufferedWriter(
+            new OutputStreamWriter(fileoutput, ENCODING));
+        buffout.write(content);
         buffout.close();
         temp.deleteOnExit();
         return temp.getPath();

@@ -10,6 +10,9 @@ from tagterm import base
 from tagterm.exceptions import RemoveError
 
 
+ENCODING = "utf-8"
+
+
 def content_normalizer(path):
     tree = ElementTree.parse(path)
     root = tree.getroot()
@@ -88,7 +91,7 @@ def content_normalizer(path):
 
     cont = ElementTree.tostring(root, method="xml")
     xml = minidom.parseString(cont)
-    content = xml.toprettyxml().encode("utf-8")
+    content = xml.toprettyxml().encode(ENCODING)
     outFile = open(path, "w")
     outFile.write(content)
 
@@ -216,7 +219,7 @@ class Remover(base.BaseWriteProcess):
             doc = ElementTree.fromstring(content)
             content = ElementTree.tostring(doc, method="xml")
             xml = minidom.parseString(content)
-            self.content = xml.toprettyxml().encode("utf-8")
+            self.content = xml.toprettyxml().encode(ENCODING)
         except Exception as exc:
             raise RemoveError("could not remove tags ({})".format(exc))
 
