@@ -21,32 +21,76 @@ def content_normalizer(path):
         'sub': 'sub'
     }
 
-    for child in root.findall(".//*[@style]"):
+    ok = fin = init = 0
 
-        regex = ("(font-((weight:( )*bold(;)*)|((style:)( )*italic(;)*)))|"
-                 "(vertical-align:( )*(super(;)*|sub(;)*))")
-        name = child.get("style")
-        copychild = child
+    with open(path) as f:
+		content = f.readlines()
 
-        changed = 0
-        for s in styleToKeep:
-            if name.find(s) != -1:
-                changed = 1
-                addChild = styleToKeep[s]
-                currentChild = ElementTree.SubElement(copychild,
+    for i in range(0, len(content)):
+        line = content[i].strip()
+        if line == '/**/' and ok == 0:
+            ok = 1
+            init = i
+        elif line == '/**/':
+            fin = i
+
+    regex = ("(font-((weight:( )*bold(;)*)|((style:)( )*italic(;)*)))|"
+             "(vertical-align:( )*(super(;)*|sub(;)*))")
+    dict = {}
+
+    for i in range (init + 1, fin - 1):
+        ok = 0
+        line = content[i].split(' ')
+        lista = []
+        for word in line:
+            if re.search(regex, word):
+                ok = 1
+                lista.append(word)
+        if ok == 1:
+            dict.update({line[0]: lista})
+
+    for peer in dict:
+        p = peer.split('.')
+
+        for child in root.findall('.//'):
+            if child.get('class') == p[1]:
+                for val in dict[peer]:
+                    name = val
+                    copychild = child
+                    changed = 0
+                    nrChildren = 0
+
+                    for c in child.findall("*"):
+			            nrChildren += 1
+
+                    for s in styleToKeep:
+                        if name.find(s) != -1:
+                            changed = 1
+                            addChild = styleToKeep[s]
+                            currentChild = ElementTree.SubElement(copychild,
                                                       addChild)
-                copychild = currentChild
+                            copychild = currentChild
 
-        if changed == 1:
-            currentChild.text = child.text
-            child.attrib["style"] = re.sub(regex, "",
-                                           name)
-            if child.attrib["style"] == "":
-                del child.attrib["style"]
-            del child.text
+                    if changed == 1:
+                        currentChild.text = child.text
 
+                        if child.text :
+                            del child.text
+
+                        if nrChildren > 0:
+                            for i in range(0, nrChildren):
+                                currentChild.append(child[i])
+                            for i in reversed(range(0, nrChildren)):
+                                del child[i]
+
+                if 'class' in child.attrib:
+                    del child.attrib['class']
+
+    cont = ElementTree.tostring(root, method="xml")
+    xml = minidom.parseString(cont)
+    content = xml.toprettyxml().encode("utf-8")
     outFile = open(path, "w")
-    tree.write(outFile)
+    outFile.write(content)
 
 
 class TagTerminator(HTMLParser):
