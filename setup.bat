@@ -1,6 +1,6 @@
 @echo off
 
-copy bin\tidy.dll %windir%\System32
+copy /y bin\tidy.dll %windir%\System32
 regsvr32 /s tidy.dll
 
 python setup.py install
