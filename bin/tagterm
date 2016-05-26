@@ -44,7 +44,6 @@ def remove(args):
     remover.load()
     remover.remove()
     remover.save()
-    tagterm.normalize(remover.path_out)
     print(remover.path_out)
 
 

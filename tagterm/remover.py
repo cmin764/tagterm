@@ -13,9 +13,8 @@ from tagterm.exceptions import RemoveError
 ENCODING = "utf-8"
 
 
-def content_normalizer(path):
-    tree = ElementTree.parse(path)
-    root = tree.getroot()
+def content_normalizer(content):
+    root = ElementTree.fromstring(content)
 
     styleToKeep = {
         'bold': 'b',
@@ -25,9 +24,7 @@ def content_normalizer(path):
     }
 
     ok = fin = init = 0
-
-    with open(path) as f:
-		content = f.readlines()
+    content = content.splitlines()
 
     for i in range(0, len(content)):
         line = content[i].strip()
@@ -70,14 +67,14 @@ def content_normalizer(path):
                         if name.find(s) != -1:
                             changed = 1
                             addChild = styleToKeep[s]
-                            currentChild = ElementTree.SubElement(copychild,
-                                                      addChild)
+                            currentChild = ElementTree.SubElement(
+                                copychild, addChild)
                             copychild = currentChild
 
                     if changed == 1:
                         currentChild.text = child.text
 
-                        if child.text :
+                        if child.text:
                             del child.text
 
                         if nrChildren > 0:
@@ -89,11 +86,38 @@ def content_normalizer(path):
                 if 'class' in child.attrib:
                     del child.attrib['class']
 
-    cont = ElementTree.tostring(root, method="xml")
-    xml = minidom.parseString(cont)
-    content = xml.toprettyxml().encode(ENCODING)
-    outFile = open(path, "w")
-    outFile.write(content)
+    for child in root.findall('.//*[@style]'):
+
+        name = child.get('style')
+        copychild = child
+        changed = 0
+
+        nrChildren = 0
+        for c in child.findall('*'):
+            nrChildren += 1
+
+        for s in styleToKeep:
+            if name.find(s) != -1:
+                changed = 1
+                addChild = styleToKeep[s]
+                currentChild = ElementTree.SubElement(copychild, addChild)
+                copychild = currentChild
+
+        if changed == 1:
+            currentChild.text=child.text
+            if child.text:
+                del child.text
+            if nrChildren > 0 :
+                for i in range(0, nrChildren):
+                    currentChild.append(child[i])
+                for i in reversed(range(0, nrChildren)):
+                    del child[i]
+
+        child.attrib['style'] = re.sub(regex, "", name)
+        if child.attrib['style'].strip() == '':
+            del child.attrib['style']
+
+    return ElementTree.tostring(root, method="xml", encoding=ENCODING)
 
 
 class TagTerminator(HTMLParser):
@@ -212,8 +236,19 @@ class Remover(base.BaseWriteProcess):
     def remove(self):
         try:
             # Parse XHTML while removing tags and enclose data into XML.
+            content = self.content
+            if not re.search(r"<\?xml[^>]+>", content):
+                content = "<xml>\n{}\n</xml>".format(
+                    re.sub(
+                        r'<!DOCTYPE [^>]+>|<\?[^>]+>',
+                        "",
+                        content
+                    )
+                )
+            content = re.sub(r'xmlns="[^"]+"', "", content)
+            content = content_normalizer(content)
             parser = TagTerminator(self.log)
-            parser.feed(self.content)
+            parser.feed(content)
             content = "<xml>\n{}\n</xml>".format(parser.content)
             # Do one additional XML check/validation more.
             doc = ElementTree.fromstring(content)

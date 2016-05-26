@@ -3,6 +3,5 @@
 from .base import PROJECT, get_logger
 from .converter import Converter
 from .exceptions import get_return_code
-from .remover import content_normalizer as normalize
 from .remover import Remover
 from .validator import Validator
